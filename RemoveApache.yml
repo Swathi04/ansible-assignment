@@ -1,0 +1,21 @@
+---
+- hosts: linux
+  become: yes
+  tasks:
+    - name: Deleting virtual host file
+      file:
+        path: /etc/apache2/sites-available/000-default.conf
+        state: absent
+
+    - name: Remove index.html
+      file:
+        path: "/var/www/html/index.html"
+        state: absent
+
+    - name: Remove Apache2
+      apt:
+        name: apache2
+        autoremove: yes
+        state: absent
+        update_cache: yes
+        purge: yes

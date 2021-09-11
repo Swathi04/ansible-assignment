@@ -1,0 +1,47 @@
+---
+- hosts: linux
+  become: true
+  tasks:
+    - name: Install Apache2
+      apt: name=apache2 update_cache=yes state=latest
+    
+    - name: Start Apache2
+      service:
+        name: apache2
+        state: started
+
+    - name: Listen to port 8080 for Apache2
+      replace:
+        path: /etc/apache2/ports.conf
+        regexp: "^Listen 80"
+        replace: "Listen 8080"
+      notify:
+        - Restart Apache
+
+    - name: Listen to port 8080 for Apache2 Virtual Host
+      lineinfile: dest=/etc/apache2/sites-available/000-default.conf regexp="^<VirtualHost \*:80>" line="<VirtualHost *:8080>" state=present
+
+    - name: Remove existing index.html
+      file:
+        path: "/var/www/html/index.html"
+        state: absent
+
+    - name: Create new index.html
+      copy:
+        dest: "/var/www/html/index.html"
+        content: |
+          <html>
+          <head>
+          <title>Ansible Playbook Assignment</title>
+          </head>
+          <body>
+          <font style="color: blue" style="font-family: Arial, Helvetica, sans-serif; font-size: 30px">
+          <h1>Hello World from SJSU!</h1>
+          </div> 
+          </body>
+          </html>
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
