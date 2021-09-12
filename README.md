@@ -1,5 +1,5 @@
 # ansible-assignment
-Professor Andrew Bond Assignment 1
+Enterprise Software Platforms CMPE 272 Assignment 1
 
 Problem Statement: 
 Deploy three (3) Virtual Machines
